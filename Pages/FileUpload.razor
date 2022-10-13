@@ -1,0 +1,30 @@
+﻿@page "/fileinput"
+@using BlazorUploadFile.Service
+@inject IFileUpload fileUpload
+<h3>FileUpload</h3>
+
+<BlazorInputFile.InputFile OnChange="HandleFileSelected"></BlazorInputFile.InputFile>
+
+@if (file != null){
+    <p>Name: @file.Name</p>
+    <p>Size in bytes: @file.Size</p>
+    <p>File type: @file.Type</p>
+    <p>Created at: @file.LastModified</p>
+} else{
+    <p>Program sluży do ładowania plików na serwer Blazor. Po doładowaniu pliku będzie on widoczny w folderze Upload.
+        Program napisał student WAB z nr albumu 16135</p>
+}
+
+@code {
+    IFileListEntry file;
+    async Task HandleFileSelected(IFileListEntry[] files)
+    {
+        // get file from InputFile
+        file = files.FirstOrDefault();
+        if(file != null)
+        {
+            // sending file to method
+            await fileUpload.FileUploadAsync(file);
+        }
+    }
+}
